@@ -151,7 +151,6 @@
         .hero-content {
             position: relative;
             z-index: 2;
-            animation: heroFadeIn 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             opacity: 0;
             flex: 1;
             display: flex;
@@ -160,13 +159,6 @@
             align-items: center;
         }
 
-        @keyframes heroFadeIn {
-            0% { opacity: 0; transform: translateY(30px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* hero-logo styles moved to Logo Animation System section below */
-
         .hero-brand {
             font-family: 'Barlow Condensed', 'Barlow', sans-serif;
             font-weight: 700;
@@ -174,7 +166,13 @@
             letter-spacing: 0.25em;
             color: var(--azul-profundo);
             margin-bottom: 0.6rem;
-            opacity: 1;
+            opacity: 0;
+            overflow: hidden;
+        }
+        .hero-brand span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(100%);
         }
 
         .hero-tagline {
@@ -186,7 +184,6 @@
             letter-spacing: 0.05em;
             margin-bottom: 2.8rem;
             opacity: 0;
-            animation: heroFadeIn 1.4s 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             min-height: 1.8em;
         }
         .hero-tagline span {
@@ -200,8 +197,8 @@
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--azul-ceu), transparent);
             margin: 0 auto 2.5rem;
-            animation: heroFadeIn 1.4s 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             opacity: 0;
+            transform: scaleX(0);
         }
 
         .hero-subtitle {
@@ -211,8 +208,8 @@
             max-width: 460px;
             line-height: 1.7;
             letter-spacing: 0.01em;
-            animation: heroFadeIn 1.4s 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             opacity: 0;
+            transform: translateY(20px);
         }
 
         /* Scroll indicator */
@@ -225,7 +222,6 @@
             gap: 8px;
             margin-top: auto;
             padding-bottom: 2rem;
-            animation: heroFadeIn 1.4s 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             opacity: 0;
             cursor: pointer;
             text-decoration: none;
@@ -451,22 +447,14 @@
             text-align: left;
         }
 
-        /* Scroll reveal animation */
+        /* Scroll reveal — GSAP ScrollTrigger controlled (desktop) */
         @media (min-width: 769px) {
             .reveal {
                 opacity: 0;
-                transform: translateY(30px);
-                transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                transform: translateY(40px);
             }
-            .reveal.visible {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            .reveal-delay-1 { transition-delay: 0.15s; }
-            .reveal-delay-2 { transition-delay: 0.3s; }
-            .reveal-delay-3 { transition-delay: 0.45s; }
         }
-        /* Mobile: always visible, no JS dependency */
+        /* Mobile: always visible */
         @media (max-width: 768px) {
             .reveal {
                 opacity: 1 !important;
@@ -1274,7 +1262,7 @@
             justify-content: center;
         }
 
-        /* Glow pulse behind logo */
+        /* Glow pulse behind logo — GSAP controlled */
         .logo-wrapper::before {
             content: '';
             position: absolute;
@@ -1282,11 +1270,12 @@
             height: 180px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(61,155,233,0.25) 0%, rgba(0,71,204,0.1) 40%, transparent 70%);
-            animation: logoGlowPulse 4s ease-in-out infinite;
             z-index: 0;
+            opacity: 0;
+            transform: scale(0.5);
         }
 
-        /* Rotating light ring */
+        /* Rotating light ring — GSAP controlled */
         .logo-wrapper::after {
             content: '';
             position: absolute;
@@ -1296,17 +1285,18 @@
             border: 1.5px solid transparent;
             border-top-color: rgba(61,155,233,0.4);
             border-right-color: rgba(0,71,204,0.2);
-            animation: logoRingSpin 6s linear infinite;
             z-index: 1;
+            opacity: 0;
         }
 
         .hero-logo {
             position: relative;
             z-index: 2;
-            animation: logoEntrance 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
-                       logoFloat 5s 2s ease-in-out infinite;
+            width: 140px;
+            height: auto;
             opacity: 0;
-            filter: drop-shadow(0 8px 32px rgba(0, 43, 143, 0.2));
+            transform: scale(0.3) rotateY(40deg);
+            filter: blur(20px) drop-shadow(0 8px 32px rgba(0, 43, 143, 0.2));
         }
 
         /* Shine sweep across logo */
@@ -1319,7 +1309,6 @@
             z-index: 3;
             pointer-events: none;
             overflow: hidden;
-            border-radius: 0;
         }
         .logo-shine::after {
             content: '';
@@ -1328,68 +1317,8 @@
             left: -60%;
             width: 40%;
             height: 200%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255,255,255,0.35),
-                rgba(255,255,255,0.1),
-                transparent
-            );
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), rgba(255,255,255,0.1), transparent);
             transform: skewX(-20deg);
-            animation: logoShine 4s 2.5s ease-in-out infinite;
-        }
-
-        /* Entrance: blur + scale + fade */
-        @keyframes logoEntrance {
-            0% {
-                opacity: 0;
-                transform: scale(0.3) rotateY(40deg);
-                filter: blur(20px) drop-shadow(0 8px 32px rgba(0, 43, 143, 0.2));
-            }
-            50% {
-                opacity: 0.8;
-                filter: blur(3px) drop-shadow(0 8px 32px rgba(0, 43, 143, 0.3));
-            }
-            80% {
-                transform: scale(1.06) rotateY(-3deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotateY(0deg);
-                filter: blur(0px) drop-shadow(0 8px 32px rgba(0, 43, 143, 0.2));
-            }
-        }
-
-        /* Gentle float */
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        /* Glow pulse */
-        @keyframes logoGlowPulse {
-            0%, 100% {
-                transform: scale(0.9);
-                opacity: 0.4;
-            }
-            50% {
-                transform: scale(1.15);
-                opacity: 0.8;
-            }
-        }
-
-        /* Ring spin */
-        @keyframes logoRingSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Shine sweep */
-        @keyframes logoShine {
-            0%, 100% { left: -60%; opacity: 0; }
-            10% { opacity: 1; }
-            40% { left: 120%; opacity: 0; }
-            41% { left: -60%; opacity: 0; }
         }
 
         /* Floating orbs behind hero */
@@ -1543,15 +1472,8 @@
         }
         .hero-brand span {
             display: inline-block;
-            animation: letterPop 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
             opacity: 0;
-            transform: translateY(20px);
-        }
-
-        @keyframes letterPop {
-            0% { opacity: 0; transform: translateY(20px) scale(0.8); }
-            60% { transform: translateY(-3px) scale(1.05); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            transform: translateY(100%);
         }
 
         /* Enhanced scroll indicator */
@@ -1594,32 +1516,7 @@
         }
 
         /* Enhanced reveal with different directions */
-        @media (min-width: 769px) {
-            .reveal-left {
-                opacity: 0;
-                transform: translateX(-40px);
-                transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            }
-            .reveal-left.visible {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            .reveal-scale {
-                opacity: 0;
-                transform: scale(0.9);
-                transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            }
-            .reveal-scale.visible {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        @media (max-width: 768px) {
-            .reveal-left, .reveal-scale {
-                opacity: 1 !important;
-                transform: none !important;
-            }
-        }
+        /* reveal-left / reveal-scale now handled by GSAP */
 
         /* Magnetic hover on founder cards */
         .founder-card {
@@ -1717,6 +1614,9 @@
             50% { width: 80px; opacity: 1; }
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js" defer></script>
 </head>
 <body>
 
@@ -2144,24 +2044,20 @@
     </section>
 
     <script>
-        // All functionality via scroll listener — no IntersectionObserver dependency
+        // Progress bar + dot navigation (reveal handled by GSAP)
         const sections = document.querySelectorAll('section');
         const dots = document.querySelectorAll('.dot-nav a');
         const progressBar = document.getElementById('progressBar');
-        const revealElements = document.querySelectorAll('.reveal');
 
         function onScroll() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
             const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
             const windowHeight = window.innerHeight;
 
-            // 1. Progress bar
             if (scrollHeight > 0) {
-                const progress = Math.min((scrollTop / scrollHeight) * 100, 100);
-                progressBar.style.width = progress + '%';
+                progressBar.style.width = Math.min((scrollTop / scrollHeight) * 100, 100) + '%';
             }
 
-            // 2. Dot navigation — find which section is most visible
             let currentId = '';
             sections.forEach(function(section) {
                 var rect = section.getBoundingClientRect();
@@ -2169,48 +2065,38 @@
                     currentId = section.id;
                 }
             });
-
             if (currentId) {
                 dots.forEach(function(dot) {
                     dot.classList.remove('active');
-                    if (dot.getAttribute('href') === '#' + currentId) {
-                        dot.classList.add('active');
-                    }
+                    if (dot.getAttribute('href') === '#' + currentId) dot.classList.add('active');
                 });
             }
-
-            // 3. Reveal animations (desktop only, mobile handled by CSS)
-            revealElements.forEach(function(el) {
-                var rect = el.getBoundingClientRect();
-                if (rect.top < windowHeight - 40) {
-                    el.classList.add('visible');
-                }
-            });
         }
 
-        // Attach scroll listener with passive flag for performance
         window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', onScroll, { passive: true });
-        window.addEventListener('touchmove', onScroll, { passive: true });
-
-        // Run on load and after small delay (Safari quirk)
         onScroll();
         window.addEventListener('load', onScroll);
-        setTimeout(onScroll, 300);
-        setTimeout(onScroll, 1000);
     </script>
 
     <script>
-        // ===== ENHANCED EFFECTS — MODERN UI =====
+        // ===== GSAP ANIMATION ENGINE =====
+        // Wait for GSAP to load (deferred)
+        window.addEventListener('DOMContentLoaded', function() {
 
-        // 1. PAGE LOADER
+        // Register ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ===== 1. PAGE LOADER =====
         window.addEventListener('load', function() {
             setTimeout(function() {
                 document.getElementById('pageLoader').classList.add('loaded');
-            }, 1200);
+                // Start hero animation after loader fades
+                setTimeout(heroTimeline, 400);
+            }, 800);
         });
 
-        // 2. PARTICLE SYSTEM
+        // ===== 2. PARTICLE SYSTEM (kept as-is) =====
         (function() {
             var canvas = document.getElementById('particleCanvas');
             var ctx = canvas.getContext('2d');
@@ -2224,10 +2110,7 @@
             resize();
             window.addEventListener('resize', resize);
 
-            function Particle() {
-                this.reset();
-            }
-
+            function Particle() { this.reset(); }
             Particle.prototype.reset = function() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
@@ -2237,12 +2120,9 @@
                 this.opacity = Math.random() * 0.5 + 0.1;
                 this.color = Math.random() > 0.5 ? '61,155,233' : '0,71,204';
             };
-
             Particle.prototype.update = function() {
                 this.x += this.speedX;
                 this.y += this.speedY;
-
-                // Mouse interaction — gentle push
                 var dx = this.x - mouseX;
                 var dy = this.y - mouseY;
                 var dist = Math.sqrt(dx * dx + dy * dy);
@@ -2251,23 +2131,17 @@
                     this.x += dx * force;
                     this.y += dy * force;
                 }
-
                 if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
                 if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
             };
-
             Particle.prototype.draw = function() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(' + this.color + ',' + this.opacity + ')';
                 ctx.fill();
             };
-
-            // Create particles
             var count = Math.min(80, Math.floor(window.innerWidth / 15));
-            for (var i = 0; i < count; i++) {
-                particles.push(new Particle());
-            }
+            for (var i = 0; i < count; i++) particles.push(new Particle());
 
             function connectParticles() {
                 for (var i = 0; i < particles.length; i++) {
@@ -2276,9 +2150,8 @@
                         var dy = particles[i].y - particles[j].y;
                         var dist = Math.sqrt(dx * dx + dy * dy);
                         if (dist < 120) {
-                            var opacity = (1 - dist / 120) * 0.15;
                             ctx.beginPath();
-                            ctx.strokeStyle = 'rgba(61,155,233,' + opacity + ')';
+                            ctx.strokeStyle = 'rgba(61,155,233,' + ((1 - dist / 120) * 0.15) + ')';
                             ctx.lineWidth = 0.5;
                             ctx.moveTo(particles[i].x, particles[i].y);
                             ctx.lineTo(particles[j].x, particles[j].y);
@@ -2287,198 +2160,381 @@
                     }
                 }
             }
-
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(function(p) {
-                    p.update();
-                    p.draw();
-                });
+                particles.forEach(function(p) { p.update(); p.draw(); });
                 connectParticles();
                 requestAnimationFrame(animate);
             }
             animate();
-
-            document.addEventListener('mousemove', function(e) {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
+            document.addEventListener('mousemove', function(e) { mouseX = e.clientX; mouseY = e.clientY; });
         })();
 
-        // 3. CURSOR GLOW
+        // ===== 3. CURSOR GLOW (kept as-is) =====
         (function() {
             var glow = document.getElementById('cursorGlow');
-            var isTouch = 'ontouchstart' in window;
-            if (isTouch) {
-                glow.style.display = 'none';
-                return;
-            }
-
+            if ('ontouchstart' in window) { glow.style.display = 'none'; return; }
             document.addEventListener('mousemove', function(e) {
                 glow.style.left = e.clientX + 'px';
                 glow.style.top = e.clientY + 'px';
             });
         })();
 
-        // 4. HERO BRAND LETTER ANIMATION
-        (function() {
+        // ===== 4. HERO ENTRANCE TIMELINE (GSAP) =====
+        function heroTimeline() {
+            var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+            // Show hero content container
+            tl.to('.hero-content', { opacity: 1, duration: 0.01 });
+
+            // Logo: blur -> clear, scale up with bounce
+            tl.to('.hero-logo', {
+                opacity: 1,
+                scale: 1,
+                rotateY: 0,
+                filter: 'blur(0px) drop-shadow(0 8px 32px rgba(0, 43, 143, 0.2))',
+                duration: 1.4,
+                ease: 'back.out(1.4)'
+            }, 0.1);
+
+            // Logo glow appears
+            tl.to('.logo-wrapper::before', {
+                opacity: 0.6,
+                scale: 1,
+                duration: 1,
+            }, 0.5);
+
+            // Brand text — split into letters and stagger
             var brand = document.querySelector('.hero-brand');
-            if (!brand) return;
-            var text = brand.textContent.trim();
-            brand.innerHTML = '';
-            for (var i = 0; i < text.length; i++) {
-                var span = document.createElement('span');
-                span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
-                span.style.animationDelay = (0.3 + i * 0.08) + 's';
-                brand.appendChild(span);
-            }
-        })();
-
-        // 5. COUNTER ANIMATION
-        (function() {
-            var counters = document.querySelectorAll('.founder-exp-number');
-            var animated = new Set();
-
-            function animateCounter(el) {
-                var text = el.textContent.trim();
-                var prefix = text.replace(/[0-9]/g, '').replace(/\+$/, '');
-                var hasPlus = text.indexOf('+') >= 0;
-                var num = parseInt(text.replace(/[^0-9]/g, ''));
-                if (isNaN(num)) return;
-
-                var duration = 2000;
-                var start = null;
-
-                function step(timestamp) {
-                    if (!start) start = timestamp;
-                    var progress = Math.min((timestamp - start) / duration, 1);
-                    var ease = 1 - Math.pow(1 - progress, 3);
-                    var current = Math.floor(ease * num);
-                    el.textContent = (hasPlus ? '+' : '') + prefix + current;
-                    if (progress < 1) {
-                        requestAnimationFrame(step);
-                    } else {
-                        el.textContent = text;
-                    }
+            if (brand) {
+                var text = brand.textContent.trim();
+                brand.innerHTML = '';
+                brand.style.opacity = '1';
+                for (var i = 0; i < text.length; i++) {
+                    var span = document.createElement('span');
+                    span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+                    brand.appendChild(span);
                 }
-                requestAnimationFrame(step);
+                tl.to('.hero-brand span', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    stagger: 0.04,
+                    ease: 'back.out(2)'
+                }, 0.8);
             }
 
-            function checkCounters() {
-                counters.forEach(function(el, idx) {
-                    if (animated.has(idx)) return;
-                    var rect = el.getBoundingClientRect();
-                    if (rect.top < window.innerHeight - 50) {
-                        animated.add(idx);
-                        animateCounter(el);
-                    }
-                });
-            }
-
-            window.addEventListener('scroll', checkCounters, { passive: true });
-            checkCounters();
-        })();
-
-        // 6. TYPING EFFECT FOR TAGLINE
-        (function() {
-            var tagline = document.querySelector('.hero-tagline');
-            if (!tagline) return;
-            var originalHTML = tagline.innerHTML;
-            var originalText = tagline.textContent.trim();
-            tagline.innerHTML = '';
-            tagline.style.opacity = '1';
-            tagline.classList.add('typing-cursor');
-
-            setTimeout(function() {
-                var i = 0;
+            // Tagline typing effect
+            tl.add(function() {
+                var tagline = document.querySelector('.hero-tagline');
+                if (!tagline) return;
+                var originalHTML = tagline.innerHTML;
+                var originalText = tagline.textContent.trim();
+                tagline.innerHTML = '';
+                gsap.to(tagline, { opacity: 1, duration: 0.01 });
+                tagline.classList.add('typing-cursor');
+                var charIndex = 0;
                 function typeChar() {
-                    if (i < originalText.length) {
-                        tagline.textContent += originalText[i];
-                        i++;
-                        setTimeout(typeChar, 40 + Math.random() * 30);
+                    if (charIndex < originalText.length) {
+                        tagline.textContent += originalText[charIndex];
+                        charIndex++;
+                        setTimeout(typeChar, 35 + Math.random() * 25);
                     } else {
-                        // Restore original HTML with formatting
                         setTimeout(function() {
                             tagline.innerHTML = originalHTML;
                             tagline.classList.remove('typing-cursor');
-                        }, 500);
+                        }, 400);
                     }
                 }
                 typeChar();
-            }, 2000);
-        })();
+            }, 1.6);
 
-        // 7. PARALLAX ON SCROLL
-        (function() {
-            var hero = document.querySelector('.hero');
-            var orbs = document.querySelectorAll('.hero-orb');
+            // Divider grows
+            tl.to('.hero-divider', {
+                opacity: 1,
+                scaleX: 1,
+                duration: 0.8,
+                ease: 'power2.inOut'
+            }, 2.0);
 
-            window.addEventListener('scroll', function() {
-                var scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
-                var factor = scrollTop * 0.3;
+            // Subtitle rises
+            tl.to('.hero-subtitle', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power2.out'
+            }, 2.2);
 
-                // Parallax the hero background blobs
-                if (hero) {
-                    var heroRect = hero.getBoundingClientRect();
-                    if (heroRect.bottom > 0) {
-                        orbs.forEach(function(orb, i) {
-                            var speed = 0.15 + i * 0.08;
-                            orb.style.transform = 'translateY(' + (scrollTop * speed) + 'px)';
-                        });
+            // Scroll indicator fades in
+            tl.to('.scroll-indicator', {
+                opacity: 1,
+                duration: 0.6,
+                ease: 'power2.out'
+            }, 2.5);
+
+            // Start infinite logo animations after entrance
+            tl.add(function() {
+                // Floating logo
+                gsap.to('.hero-logo', {
+                    y: -8,
+                    duration: 2.5,
+                    ease: 'sine.inOut',
+                    yoyo: true,
+                    repeat: -1
+                });
+
+                // Glow pulse — animate a proxy element
+                gsap.fromTo('.logo-wrapper', {
+                    '--glow-scale': 0.9,
+                    '--glow-opacity': 0.3
+                }, {
+                    '--glow-scale': 1.15,
+                    '--glow-opacity': 0.7,
+                    duration: 2,
+                    ease: 'sine.inOut',
+                    yoyo: true,
+                    repeat: -1
+                });
+
+                // Shine sweep — loop
+                gsap.fromTo('.logo-shine::after', { left: '-60%' }, {
+                    left: '120%',
+                    duration: 2,
+                    ease: 'power2.inOut',
+                    repeat: -1,
+                    repeatDelay: 3
+                });
+            }, 3);
+        }
+
+        // ===== 5. SCROLL REVEAL ANIMATIONS (GSAP ScrollTrigger) =====
+        if (window.innerWidth >= 769) {
+            // Batch all .reveal elements
+            ScrollTrigger.batch('.reveal', {
+                onEnter: function(batch) {
+                    gsap.to(batch, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        ease: 'power3.out',
+                        stagger: 0.12,
+                        overwrite: true
+                    });
+                },
+                start: 'top 85%'
+            });
+
+            // Section titles — clip-path reveal
+            gsap.utils.toArray('.section-title').forEach(function(title) {
+                gsap.fromTo(title, {
+                    clipPath: 'inset(0 100% 0 0)'
+                }, {
+                    clipPath: 'inset(0 0% 0 0)',
+                    duration: 1,
+                    ease: 'power3.inOut',
+                    scrollTrigger: {
+                        trigger: title,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
                     }
-                }
-            }, { passive: true });
-        })();
+                });
+            });
 
-        // 8. TILT EFFECT ON FOUNDER CARDS
+            // Section numbers — scale in
+            gsap.utils.toArray('.section-num').forEach(function(num) {
+                gsap.from(num, {
+                    scale: 0.5,
+                    opacity: 0,
+                    duration: 0.6,
+                    ease: 'back.out(1.5)',
+                    scrollTrigger: {
+                        trigger: num,
+                        start: 'top 85%'
+                    }
+                });
+            });
+
+            // Section lines — grow from left
+            gsap.utils.toArray('.section-line').forEach(function(line) {
+                gsap.from(line, {
+                    scaleX: 0,
+                    transformOrigin: 'left center',
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: line,
+                        start: 'top 85%'
+                    }
+                });
+            });
+
+            // Founder cards — stagger with 3D
+            gsap.from('.founder-card', {
+                y: 60,
+                opacity: 0,
+                rotateX: 10,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.founders-grid',
+                    start: 'top 75%'
+                }
+            });
+
+            // Valor cards — stagger
+            gsap.from('.valor-card', {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.6,
+                stagger: 0.1,
+                ease: 'back.out(1.5)',
+                scrollTrigger: {
+                    trigger: '.valores-grid',
+                    start: 'top 75%'
+                }
+            });
+
+            // Atuacao cards — stagger from bottom
+            gsap.from('.atuacao-card', {
+                y: 50,
+                opacity: 0,
+                duration: 0.7,
+                stagger: 0.1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.atuacao-grid',
+                    start: 'top 75%'
+                }
+            });
+
+            // Eco cards — stagger
+            gsap.from('.eco-card', {
+                y: 40,
+                opacity: 0,
+                duration: 0.7,
+                stagger: 0.12,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.eco-grid',
+                    start: 'top 75%'
+                }
+            });
+
+            // Publico cards — stagger
+            gsap.from('.publico-card', {
+                y: 40,
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.7,
+                stagger: 0.15,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.publico-grid',
+                    start: 'top 75%'
+                }
+            });
+
+            // CTA section — dramatic entrance
+            gsap.from('.cta-inner', {
+                y: 60,
+                opacity: 0,
+                scale: 0.95,
+                duration: 1,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.cta-section',
+                    start: 'top 70%'
+                }
+            });
+        }
+
+        // ===== 6. COUNTER ANIMATION (GSAP) =====
+        gsap.utils.toArray('.founder-exp-number').forEach(function(el) {
+            var text = el.textContent.trim();
+            var hasPlus = text.indexOf('+') >= 0;
+            var num = parseInt(text.replace(/[^0-9]/g, ''));
+            if (isNaN(num)) return;
+
+            var obj = { val: 0 };
+            ScrollTrigger.create({
+                trigger: el,
+                start: 'top 85%',
+                once: true,
+                onEnter: function() {
+                    gsap.to(obj, {
+                        val: num,
+                        duration: 2,
+                        ease: 'power2.out',
+                        snap: { val: 1 },
+                        onUpdate: function() {
+                            el.textContent = (hasPlus ? '+' : '') + Math.round(obj.val);
+                        }
+                    });
+                }
+            });
+        });
+
+        // ===== 7. PARALLAX (GSAP ScrollTrigger) =====
+        gsap.utils.toArray('.hero-orb').forEach(function(orb, i) {
+            gsap.to(orb, {
+                y: 100 + i * 50,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: 'bottom top',
+                    scrub: true
+                }
+            });
+        });
+
+        // ===== 8. TILT EFFECT (kept as-is, works well) =====
         (function() {
             if ('ontouchstart' in window) return;
-            var cards = document.querySelectorAll('.founder-card');
-            cards.forEach(function(card) {
+            document.querySelectorAll('.founder-card').forEach(function(card) {
                 card.addEventListener('mousemove', function(e) {
                     var rect = card.getBoundingClientRect();
                     var x = e.clientX - rect.left;
                     var y = e.clientY - rect.top;
-                    var centerX = rect.width / 2;
-                    var centerY = rect.height / 2;
-                    var rotateX = (y - centerY) / centerY * -4;
-                    var rotateY = (x - centerX) / centerX * 4;
-                    card.style.transform = 'translateY(-4px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg)';
+                    var rotateX = (y - rect.height / 2) / (rect.height / 2) * -4;
+                    var rotateY = (x - rect.width / 2) / (rect.width / 2) * 4;
+                    gsap.to(card, {
+                        rotateX: rotateX,
+                        rotateY: rotateY,
+                        y: -4,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
                 });
                 card.addEventListener('mouseleave', function() {
-                    card.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
-                    card.style.transition = 'transform 0.5s ease';
-                    setTimeout(function() { card.style.transition = ''; }, 500);
+                    gsap.to(card, {
+                        rotateX: 0,
+                        rotateY: 0,
+                        y: 0,
+                        duration: 0.5,
+                        ease: 'elastic.out(1, 0.5)'
+                    });
                 });
             });
         })();
 
-        // 9. SMOOTH SCROLL ENHANCEMENT
+        // ===== 9. SMOOTH SCROLL =====
         document.querySelectorAll('a[href^="#"]').forEach(function(a) {
             a.addEventListener('click', function(e) {
                 e.preventDefault();
                 var target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    gsap.to(window, {
+                        scrollTo: { y: target, offsetY: 0 },
+                        duration: 1,
+                        ease: 'power2.inOut'
+                    });
                 }
             });
         });
 
-        // 10. INTERSECTION OBSERVER FOR STAGGERED REVEALS
-        (function() {
-            if (window.innerWidth < 769) return;
-            var observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-            document.querySelectorAll('.reveal, .reveal-left, .reveal-scale').forEach(function(el) {
-                observer.observe(el);
-            });
-        })();
+        }); // end DOMContentLoaded
     </script>
 
 </body>
