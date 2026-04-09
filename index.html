@@ -1262,31 +1262,10 @@
             justify-content: center;
         }
 
-        /* Glow pulse behind logo — GSAP controlled */
-        .logo-wrapper::before {
-            content: '';
-            position: absolute;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(61,155,233,0.25) 0%, rgba(0,71,204,0.1) 40%, transparent 70%);
-            z-index: 0;
-            opacity: 0;
-            transform: scale(0.5);
-        }
-
-        /* Rotating light ring — GSAP controlled */
+        /* Logo wrapper — clean, no pseudo-element borders */
+        .logo-wrapper::before,
         .logo-wrapper::after {
-            content: '';
-            position: absolute;
-            width: 170px;
-            height: 170px;
-            border-radius: 50%;
-            border: 1.5px solid transparent;
-            border-top-color: rgba(61,155,233,0.4);
-            border-right-color: rgba(0,71,204,0.2);
-            z-index: 1;
-            opacity: 0;
+            display: none;
         }
 
         .hero-logo {
@@ -1299,7 +1278,7 @@
             filter: blur(20px) drop-shadow(0 8px 32px rgba(0, 43, 143, 0.2));
         }
 
-        /* Shine sweep across logo */
+        /* Shine sweep across logo — hidden, no visible box */
         .logo-shine {
             position: absolute;
             top: 0;
@@ -1309,6 +1288,9 @@
             z-index: 3;
             pointer-events: none;
             overflow: hidden;
+            border: none;
+            outline: none;
+            background: transparent;
         }
         .logo-shine::after {
             content: '';
@@ -2197,13 +2179,6 @@
                 ease: 'back.out(1.4)'
             }, 0.1);
 
-            // Logo glow appears
-            tl.to('.logo-wrapper::before', {
-                opacity: 0.6,
-                scale: 1,
-                duration: 1,
-            }, 0.5);
-
             // Brand text — split into letters and stagger
             var brand = document.querySelector('.hero-brand');
             if (brand) {
@@ -2272,37 +2247,14 @@
                 ease: 'power2.out'
             }, 2.5);
 
-            // Start infinite logo animations after entrance
+            // Start infinite logo float after entrance
             tl.add(function() {
-                // Floating logo
                 gsap.to('.hero-logo', {
                     y: -8,
                     duration: 2.5,
                     ease: 'sine.inOut',
                     yoyo: true,
                     repeat: -1
-                });
-
-                // Glow pulse — animate a proxy element
-                gsap.fromTo('.logo-wrapper', {
-                    '--glow-scale': 0.9,
-                    '--glow-opacity': 0.3
-                }, {
-                    '--glow-scale': 1.15,
-                    '--glow-opacity': 0.7,
-                    duration: 2,
-                    ease: 'sine.inOut',
-                    yoyo: true,
-                    repeat: -1
-                });
-
-                // Shine sweep — loop
-                gsap.fromTo('.logo-shine::after', { left: '-60%' }, {
-                    left: '120%',
-                    duration: 2,
-                    ease: 'power2.inOut',
-                    repeat: -1,
-                    repeatDelay: 3
                 });
             }, 3);
         }
