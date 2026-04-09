@@ -1516,62 +1516,12 @@
             position: relative;
         }
 
-        /* Loading animation */
-        .page-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--branco);
-            z-index: 99999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), visibility 0.8s;
-        }
-        .page-loader.loaded {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .loader-content {
-            text-align: center;
-        }
-        .loader-a {
-            font-family: 'Barlow Condensed', sans-serif;
-            font-size: 4rem;
-            font-weight: 700;
-            color: var(--azul-profundo);
-            position: relative;
-            display: inline-block;
-        }
-        .loader-line {
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--azul-profundo), var(--azul-ceu));
-            margin: 1rem auto 0;
-            border-radius: 3px;
-            animation: loaderPulse 1.5s ease-in-out infinite;
-        }
-        @keyframes loaderPulse {
-            0%, 100% { width: 30px; opacity: 0.5; }
-            50% { width: 80px; opacity: 1; }
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js" defer></script>
 </head>
 <body>
-
-    <!-- Page Loader -->
-    <div class="page-loader" id="pageLoader">
-        <div class="loader-content">
-            <div class="loader-a">AR SOUZA</div>
-            <div class="loader-line"></div>
-        </div>
-    </div>
 
     <!-- Particle Canvas -->
     <canvas id="particleCanvas"></canvas>
@@ -2029,13 +1979,9 @@
         // Register ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // ===== 1. PAGE LOADER =====
+        // ===== 1. START HERO ANIMATION ON LOAD =====
         window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('pageLoader').classList.add('loaded');
-                // Start hero animation after loader fades
-                setTimeout(heroTimeline, 400);
-            }, 800);
+            setTimeout(heroTimeline, 300);
         });
 
         // ===== 2. PARTICLE SYSTEM (kept as-is) =====
